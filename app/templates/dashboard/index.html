@@ -3,7 +3,7 @@
 {% block header %}
   <h1>{% block title %}Questions{% endblock %}</h1>
   {% if g.user %}
-    <a class="action" href="{{ url_for('questions.create') }}">New</a>
+    <a class="action" href="{{ url_for('dashboard.create') }}">New</a>
   {% endif %}
 {% endblock %}
 
@@ -14,6 +14,9 @@
         <div>
           <h1>{{ q['field_code'] }}</h1>
         </div>
+        <a class="action" href="{{ url_for('dashboard.update', id=q['question_id']) }}">Edit</a>
+        <!-- {% if g.user['id'] %}
+        {% endif %} -->
       </header>
       <p class="body">{{ q['question_text'] }}</p>
     </article>

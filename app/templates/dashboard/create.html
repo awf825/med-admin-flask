@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}New Post{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form method="post">
+    <label for="field_code">field_code</label>
+    <input name="field_code" id="field_code" value="{{ request.form['field_code'] }}" required>
+    <label for="question_text">question_text</label>
+    <textarea name="question_text" id="question_text">{{ request.form['question_text'] }}</textarea>
+    <input type="submit" value="Save">
+  </form>
+{% endblock %}

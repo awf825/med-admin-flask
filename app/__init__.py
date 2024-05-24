@@ -1,5 +1,6 @@
-# https://flask.palletsprojects.com/en/3.0.x/tutorial/blog/#create
+# https://flask.palletsprojects.com/en/3.0.x/tutorial/install/
 # brew services start mysql && mysql -u root
+# flask --app app run --debug 
 import os
 
 from flask import Flask
