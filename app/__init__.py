@@ -34,7 +34,8 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root@localhost/med_diet_dbv3"
+    # app.config["SQLALCHEMY_DATABASE_URI"] = "mysql://root@localhost/med_diet_dbv3"
+    app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("MYSQL_DB_URI")
     
     db.init_app(app)
 
@@ -42,14 +43,11 @@ def create_app(test_config=None):
         db.create_all()
 
     from . import auth, dashboard
+    from .service import open_ai
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(dashboard.bp)
+    app.register_blueprint(open_ai.bp)
     app.add_url_rule('/', endpoint='index')
-
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
 
     return app
