@@ -1,5 +1,5 @@
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, jsonify
 )
 from werkzeug.exceptions import abort
 
@@ -8,7 +8,8 @@ from app import db
 from app.models import (
     Questions, QuestionAnswerOptions, 
     QuestionCategories, QuestionFieldTypes,
-    Forms
+    Forms, QuestionAnswerSubmissions,
+    QuestionAnswers
 )
 # from app.db import get_db
 
@@ -24,6 +25,17 @@ def index():
         print('question_obj.field_code: ', question_obj.field_code)
         
     return render_template('dashboard/index.html', questions=questions)
+
+@bp.route('/work', methods=('GET'))
+def work():
+    questions = []
+    stmt = db.select(Questions)
+    results = db.session.execute(stmt)
+    for question_obj in results.scalars():
+        questions.append(question_obj)
+        print('question_obj.field_code: ', question_obj.field_code)
+        
+    return jsonify(questions)
 
 @bp.route('/create', methods=('GET', 'POST'))
 @login_required
@@ -94,6 +106,20 @@ def delete(id):
     db.execute('DELETE FROM questions WHERE id = ?', (id,))
     db.session.execute(stmt)
     return redirect(url_for('dashboard.index'))
+
+# select 
+# count(qa.answer_score) as answer_number, 
+# SUM(qa.answer_score) as score, 
+# qc.category_display_name, 
+# qc.question_category_id
+# from question_answer_submissions qas 
+# join question_answers qa ON qa.question_answer_submission_id = qas.submission_id 
+# JOIN questions q ON q.question_id = qa.question_id 
+# join question_categories qc on qc.question_category_id = q.category_id 
+# where qc.question_category_id != 9 
+# and 
+# qas.user_id = :user_id 
+# group by qc.question_category_id
 
 def get_question(id, check_author=True):
     stmt = db.select(Questions).where(Questions.question_id == id)
